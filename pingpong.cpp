@@ -8,15 +8,20 @@
 #include<stdio.h>
 using namespace std;
 bool GameOver,pause;
-int x1,x2,xm,ym,xc,yc,a,b,length,err,t=5,c,d;char arr[50],arr1[50]; //x1 up x2 down t thickness
-int y1,y2,p1,p2;
+int x1,x2,xm,y1,y2,ym; //UpperPaddle(x1,y1), LowerPaddle(x2,y2)
+int length,err,t=5;//length of paddle; t= thickness of paddle;
+int xc,yc;//position of ball
+int c,d;// used for randomizing colors
+char arr[50],arr1[50];//for displaying scores
+int a,b;//increments along x and y axis for the ball(a,b)
 int lim=100; //spacing on the left and right
 int step=20; //steps the paddles move on one key press
 int cal;
-char stop;
+int p1,p2;//scores of player 1 and player 2
+char stop;//check if esc is pressed
 int lvl;
-void ball();
-void game();
+void ball();//controls ball's movements
+void game();//sets up the game
 void border()   //draw boundary limits
 {
     line(lim-10,0,lim-10,ym);
@@ -96,7 +101,7 @@ void render()
     fillellipse(xc, yc,10,10);
 }
 
-void Input2()
+void Input2()//for single player input
 {
     ball();
     if(kbhit())
@@ -136,7 +141,7 @@ void Input2()
             }
         }
     }
-    if(yc<ym/2 && b<=0)
+    if(yc<ym/2 && b<=0) // computer's paddle control
         {
             cal+=1;
             if(cal==lvl)
@@ -158,7 +163,7 @@ void Input2()
         ball();
 }
 
-void Input()
+void Input()//double player paddle control
 {
     ball();
     if(kbhit())
@@ -217,10 +222,10 @@ void Input()
         ball();
 }
 
-void singlePlayer()
+void singlePlayer()//configuration for single player mode
 {
 
-        while(stop!=27)
+    while(stop!=27)
     {   Setup();
         while(!GameOver)
         {
@@ -247,15 +252,19 @@ void singlePlayer()
         sprintf(arr1,"p2:%d",p2);
         outtextxy(300,270,arr1);
         Sleep(2000);
-        outtextxy(xm/4,ym/2+100,"Press Esc to exit or press any other key to continue");
-        stop=getch();
+        do
+        {
+            outtextxy(xm/3,ym/2+100,"Press Esc to exit or press Enter to continue");
+            stop=getch();
+
+        }while(stop!=13 && stop!=27);
     }
 }
 
-void doublePlayer()
+void doublePlayer()//configuration for double player mode
 {
 
-        while(stop!=27)
+    while(stop!=27)
     {
         Setup();
         while(!GameOver)
@@ -288,7 +297,7 @@ void doublePlayer()
     }
 }
 
-    void game()
+    void game()//main game set up HOMESCREEN
     {
     cleardevice();
     setcolor(WHITE);
